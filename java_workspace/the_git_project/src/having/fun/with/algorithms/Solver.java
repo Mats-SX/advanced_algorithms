@@ -7,20 +7,19 @@ public class Solver {
 	private static final long R = Integer.MAX_VALUE;
 	private static final int t = 500;					// our memory size
 	private static final Random RAND = new Random();
-//	private static final long[] r = new long[64];
 	private long r;
+	private int[] randomNbrs;
 	
 	/**
 	 * Algorithm D
 	 */
 	public double solve(int N) {
-		//		generateRandoms();
-		r = RAND.nextInt((int) R);
+		initRandVector();
 		TreeMap<Long, Long> map = new TreeMap<Long, Long>();
 		long sequence = 1;
 		long current = sequence;
 		while (true) {
-			long hash = hash(current);
+			long hash = hash2(current);
 //			System.out.println("The hash for " + current + " is " + hash);
 			if (map.size() < t) {
 //				System.out.println("Putting first t numbers into map");
@@ -28,7 +27,7 @@ public class Solver {
 			} else if (hash < map.lastKey() && !map.containsKey(hash)) {
 //				System.out.println("Found a better hash for " + current);
 				map.pollLastEntry();
-				map.put(hash(current), current);
+				map.put(hash, current);
 			}
 			if (current == 1) {
 //				System.out.println("Reached the end of subsequence " + sequence);
@@ -47,23 +46,33 @@ public class Solver {
 		}
 	}
 	
-	private long hash(long x) {
-//		return x % R;
-		return x * r % R;
-//		return x & r;
-//		Double hash = new Double(0);
-//		String binary = Long.toBinaryString(x);
-//		for (int i = 0; i < binary.length(); i++) {
-//			binary.substring(i, i+1);
-//			hash += '1' * r[i];
-//		}
-//		return hash.intValue();
-//		return new Long(x).hashCode();
+	void initRandVector() {
+		randomNbrs = new int[64];
+		for(int i = 0; i < randomNbrs.length; i++){
+			randomNbrs[i] = RAND.nextInt(Integer.MAX_VALUE);
+		}
 	}
-	
-//	private void generateRandoms(){
-//		for (int i = 0; i < r.length; i++){
-//			r[i] = RAND.nextLong();
-//		}
-//	}
+
+	long hash(long x) {
+		String bits = Long.toBinaryString(x);
+		long hash = 0;
+		for (int i = 0; bits.length() > 0; i++) {
+			int bit = Integer.parseInt(bits.substring(bits.length() - 1));
+			if (bit == 1) {
+				hash = hash ^ randomNbrs[i];
+			}
+			bits = bits.substring(0, bits.length() - 1);
+		}
+		return hash;
+	}
+
+	long hash2(long x) {
+		long hash = 0;
+		for (int i = 0; i < randomNbrs.length; i++) {
+			if ((x & (1L << i)) != 0L) {
+				hash = hash ^ randomNbrs[i];
+			}			
+		}
+		return hash;
+	}
 }

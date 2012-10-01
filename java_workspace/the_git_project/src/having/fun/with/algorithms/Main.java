@@ -9,17 +9,35 @@ public class Main {
 		CollatzSimulator sim = new CollatzSimulator();
 		Scanner scan = new Scanner(System.in);
 		while (true) {
+			System.out.println("Which algorithm?");
+			int alg = scan.nextInt();
 			System.out.println("Give me the sequence number!");
 			int N = scan.nextInt();
-//			Main.test(sim, N);
-////			Main.dictionary(sim, N);
-////			Main.quadratic(sim, N);
-			Main.D(N);
+			switch (alg) {
+			case 0:
+				Main.dictionary(sim, N);
+				break;
+			case 1:
+				Main.quadratic(sim, N);
+				break;
+			case 2:
+				Main.D(N);
+				break;
+			case 9:
+				Main.test(sim, N);
+				break;
+			default:
+				System.out.println("You did something wrong. Algorithms are 0, 1 or 2, ok?");
+				break;
+			}
 		}
 	}
 	
 	private static void test(CollatzSimulator sim, int N) {
-		System.out.println(5 & N);
+		Solver s = new Solver();
+		s.initRandVector();
+//		long lol = s.hash(N);
+		System.out.println((N & (1L << 2)));
 	}
 	
 	private static void dictionary(CollatzSimulator sim, int N) {
@@ -45,7 +63,6 @@ public class Main {
 			}
 		}
 		System.out.println("Took the time: " + (stopTime - start));
-		System.out.println("Counter at: " + sim.getCounter());
 	}
 	
 	private static void D(int N) {
@@ -55,6 +72,7 @@ public class Main {
 		double[] estimates = new double[iterations];
 		for (int i = 0; i < iterations; i++) {
 			estimates[i] = s.solve(N);
+			System.out.println("Iteration " + (i + 1) + " gave the estimate " + estimates[i]);
 		}
 		Arrays.sort(estimates);
 		System.out.println("After " + iterations + 

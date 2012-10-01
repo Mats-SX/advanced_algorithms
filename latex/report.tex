@@ -91,9 +91,7 @@ estimates.
 \section{Collatz 81 Report}
 
 
-by Mats Rydberg and Martin Larsson\sidenote{Complete the report by filling
-  in your names and the parts marked $[\ldots]$.
-  Remove the sidenotes in your final hand-in.}
+by Mats Rydberg and Martin Larsson
 
 
 \subsection{1. Dictionaries}
@@ -106,11 +104,7 @@ $c_1,\ldots, c_N$. For instance, $C_3$ is 1, 2, 1, 3, 10, 5, 16, 8, 4,
 The following table gives the maximum value appearing in $C_N$, the number
 of distinct values in $C_N$ (i.e., the cardinality of $C_N$ viewed as
 a set), and the total length of the sequence $|c_1|+\cdots+|c_N|$,
-for increasing values of $N$.\sidenote{
-    Write a simulator that produces the collatz sequences and computes the
-    table values.
-    Use a dictionary to compute the  cardinalities, otherwise you'll run
-    out of space.}
+for increasing values of $N$.
 
 \medskip
 \begin{tabular}{rrrr}
@@ -149,7 +143,7 @@ The following table shows the output of our implementation of
 Algorithm D, together with the error (in percent) relative to the
 correct values of $|C_N|$ computed in the first part of the report.
 
-Here we have set $t = 500$.
+Here we have set $t = 500$. We have $c = 10$ tries for which we take the median for the first values of $N$, and $c = 3$ for the last $N = 1,000,000$.
 
 \medskip
 \begin{tabular}{rrrr}
@@ -161,7 +155,7 @@ Here we have set $t = 500$.
   1,000 & 2,226 & 0,09\% \\
   10,000 & 21,546 & 0,54\% \\
   100,000 & 219,945 & 1,24\% \\
-  1,000,000 & 2,456,243 & 11,7\% \\
+  1,000,000 & 2,166,160 & 0,11\% \\
   \bottomrule
 \end{tabular}
 

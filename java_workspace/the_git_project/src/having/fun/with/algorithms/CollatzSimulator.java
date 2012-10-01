@@ -17,16 +17,6 @@ public class CollatzSimulator {
 		return 3 * current + 1;
 	}
 	
-//	public int getNextInSequencesFrom(int N) {
-//		int sequence = 1;
-//		int current = 1;
-//		current = CollatzSimulator.nextInSequence(sequence);
-//		if (current == 1) {
-//			sequence++;
-//			current = sequence;
-//		}
-//	}
-	
 	public CollatzSimulator() {
 		distinctValues = new HashSet<Long>();
 	}
@@ -65,10 +55,6 @@ public class CollatzSimulator {
 				continue;
 			}
 			current = CollatzSimulator.nextInSequence(current);		// get the next number in current sequence
-			if (current < 0){
-				System.out.println("Current overflow");
-				break;
-			}
 		}
 	}
 	
