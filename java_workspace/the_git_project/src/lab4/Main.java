@@ -1,4 +1,4 @@
-package having.fun.with.algorithms;
+package lab4;
 
 import java.util.Arrays;
 import java.util.Scanner;
