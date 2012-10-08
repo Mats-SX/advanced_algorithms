@@ -13,18 +13,17 @@ public class Test {
 	
 	static void testDeterminant() {
 		Random rand = new Random();
-		int n = 6;
+		int n =10;
 		BigInteger[][] matrix = new BigInteger[n][n];
-		System.out.print("{");
+		System.out.print("[");
 		for (int i = 0; i < n; i++) {
-			System.out.print("{");
 			for (int j = 0; j < n; j++) {
 				matrix[i][j] = BigInteger.valueOf(rand.nextInt(1000));
-				System.out.print(matrix[i][j] + ",");
+				System.out.print(matrix[i][j] + " ");
 			}
-			System.out.println("},");
+			System.out.println(";");
 		}
-		System.out.println("}");
+		System.out.println("]");
 		
 		Algorithm alg = new Algorithm();
 		System.out.println(alg.determinant(matrix).toString());
