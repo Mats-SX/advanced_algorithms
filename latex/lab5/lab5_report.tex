@@ -11,6 +11,51 @@
 \begin{document}
 \maketitle
 
+\section{Algorithm}
+\begin{enumerate}
+\item Fix prime $p \gg n$ \sidenote{In our case, we selected $p = 32749$.}
+\item For each colour $C \in [n]$
+\subitem Construct $n \ast n$ matrix $m_C$
+\subitem For each $uv \in E$ with $ c(uv) = C$
+\subsubitem Pick random integer $r \in (0,p]$
+\subsubitem Set $m_C[u,v] = r$
+\item Set $B = \sum_{i = 0}^{n-1}m_i$
+\item Compute $d_B =$ det$(B)$ mod $p$
+\item If $d_B = 0$ return ''no''
+\item Else set $sum = 0$
+\item For each $X \subset [n]$
+\subitem Initialize $M = \mathbf{0}$ \sidenote{$\mathbf{0}$ is the $n \ast n$ all-zeroes matrix.}
+\subitem For each $C \in X$
+\subsubitem Set $M = M + m_C$
+\subitem Set $sum = sum + (-1)^{n-1-|X|} \cdot$ det$(M)$ mod $p$
+\item If $d_B - sum = 0$ return ''no'' else return ''yes''
+\end{enumerate}
+
+\noindent Our algorithm modifies the given Algorithmic Piece 1 on step 2, by creating $n$ matrices, one for each colour. But in step 3 we combine them into the biadjacency matrix $B$ (called $A_G$ in the assignment) and do the same end condition for its determinant.
+
+For Algorithmic Piece 2, we have modified the pseudo code to be defined via matrix sums instead. We construct the biadjacency matrix for the current set of colours by simple addition, and compute the determinant for every such matrix. We are not including det($B$) in $sum$, so to get the signs right we subtract an extra $1$ in the exponent for $-1$.\sidenote{Another way to fix this would be to compute $d_B + sum$ in step 7 of the algorithm, but we thought this was cleaner.} This is really just an optimization, as we could remove steps 3 and 4 and have Algorithmic Piece 2 more or less intact. Our algorithm is faster for ''no''-instances, however. With this change in mind, the logic is the same as in the assignment for why a non-rainbow perfect matching will eliminate itself in the calculation of $sum$.
+
+\section{Running Time}
+$T(n) = 1 + n(1 + n²(1 + 1)) + (n³ | 1) + 1 + 1 + (2^n - 2)\cdot(1 + n(n^2 | 1) + 1 + (n - 2) + O(det(M)) = $
+\begin{enumerate}
+\item $O(1)$
+\item $O(n)$
+\subitem $O(1)$
+\subitem Worst case $n$ edges of colour $C$ from all $n$ nodes $\Rightarrow O(n^2)$
+\subsubitem $O(1)$
+\subsubitem $O(1)$
+\item $T(n) = n^3$ additions. Is this $O(1)$ or $O(n^3)$?
+\item $O(1)$
+\item $O(1)$
+\item There are $2^n$ subsets to a set of $n$ elements $\Rightarrow T(n) = 2^n - 2\text{(the empty set and the full set)} \Rightarrow O(2^n)$
+\subitem $O(1)$
+\subitem Since $|X| \leq n-1$, this is $O(n)$, right?
+\subsubitem $n^2$ additions $\Rightarrow O(1)$ or $O(n^2)$?
+\subitem $T(n) = 1 + (n-2) + O(det(M))$
+\item $O(1)$
+\end{enumerate}
+
+
 \begin{marginfigure}
 \begin{tikzpicture}
 \node (0) [draw,circle] at (0,0) {0};
@@ -27,8 +72,6 @@
 \end{tikzpicture}
 \caption{A directed multigraph.}
 \end{marginfigure}
-
-\section{Algorithm}
 
 \section{Analysis}
 

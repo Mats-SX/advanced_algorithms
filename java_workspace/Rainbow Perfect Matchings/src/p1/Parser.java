@@ -27,6 +27,44 @@ public class Parser {
 		}
 	}
 	
+	public ArrayList<int[][]> theOneAndOnlyParse() {
+		int n = scan.nextInt();
+		n = n / 2;
+		int m = scan.nextInt();
+
+		ArrayList<int[][]> list = new ArrayList<int[][]>();
+		for (int i = 0; i < n; i++) {
+			list.add(new int[n][n]);
+		}
+		
+		for (int i = 0; i < m; i++) {
+			int from = scan.nextInt();
+			int to = scan.nextInt();
+			int colour = scan.nextInt();
+//			list.get(colour)[from][to] = 
+//			colours.add(colour);
+		}
+		
+		
+		
+		return list;
+	}
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
 	/*
 	 * New and good
 	 * 
