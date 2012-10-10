@@ -87,7 +87,7 @@ public class Main {
 			for (int i : X) {
 				for (int j = 0; j < n; j++) {
 					for (int k = 0; k < n; k++) {
-						fullMatrix[j][k] += colourMatrices.get(i)[j][k];
+						M[j][k] += colourMatrices.get(i)[j][k];
 					}
 				}
 			}
