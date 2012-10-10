@@ -54,6 +54,7 @@ public class Main {
 					newColourSets.add(combination);
 				}
 				HashSet<Integer> aloneColourSet = new HashSet<Integer>();
+				aloneColourSet.add(colour);
 				colourSets.add(aloneColourSet);
 				colourSets.addAll(newColourSets);
 			}
