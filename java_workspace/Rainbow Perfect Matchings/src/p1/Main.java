@@ -12,6 +12,7 @@ import java.util.Scanner;
 /**
  * For all user interaction. Reads input, posts error messages, etc.
  * @author dt08mr7
+ * @author dt08ml5
  *
  */
 public class Main {
@@ -31,16 +32,31 @@ public class Main {
 			colourMatrices.add(new int[n][n]);
 		}
 		
-		// additional optimization
-//		HashSet<Integer> colours = new HashSet<Integer>();
 		// 2
+		// additional optimization
+		ArrayList<HashSet<Integer>> colourSets = new ArrayList<HashSet<Integer>>();
+		HashSet<Integer> addedColours = new HashSet<Integer>();
 		Random rand = new Random();
 		for (int i = 0; i < m; i++) {
 			int from = scan.nextInt();
 			int to = scan.nextInt();
 			int colour = scan.nextInt();
 			colourMatrices.get(colour)[from][to] = rand.nextInt(prime);
-//			colours.add(colour);
+			
+			// creates all subsets as a new colour is found
+			if (!addedColours.contains(colour)){
+				addedColours.add(colour);
+				ArrayList<HashSet<Integer>> newColourSets = new ArrayList<HashSet<Integer>>();
+				for (HashSet<Integer> set : colourSets){
+					//Does not copy single elements but does not matter since they are ints.
+					HashSet<Integer> combination = (HashSet<Integer>) set.clone(); 
+					combination.add(colour);
+					newColourSets.add(combination);
+				}
+				HashSet<Integer> aloneColourSet = new HashSet<Integer>();
+				colourSets.add(aloneColourSet);
+				colourSets.addAll(newColourSets);
+			}
 		}
 
 		// 3
@@ -65,15 +81,7 @@ public class Main {
 		int sum = 0;
 		
 		// 7
-		// construct powerset of [n]
-		HashSet<Integer> colours = new HashSet<Integer>();
-		for (int i = 0; i < n; i++) {
-			colours.add(i);
-		}
-		// powerset of a set...?
-		ArrayList<HashSet<Integer>> powerSet = new ArrayList<HashSet<Integer>>();
-		
-		for (HashSet<Integer> X : powerSet) {
+		for (HashSet<Integer> X : colourSets) {
 			int[][] M = new int[n][n];
 			for (int i : X) {
 				for (int j = 0; j < n; j++) {
@@ -82,7 +90,7 @@ public class Main {
 					}
 				}
 			}
-			sum += Math.pow(-1, n - 1 - X.size()) * /* determinant(M) mod p */1;
+			sum += Math.pow(-1, n - 1 - X.size()); //* determinant(M) mod p */1;
 		}
 		
 		// 8
