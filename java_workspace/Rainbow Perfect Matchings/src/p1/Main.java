@@ -35,6 +35,7 @@ public class Main {
 		// 2
 		// additional optimization
 		ArrayList<HashSet<Integer>> colourSets = new ArrayList<HashSet<Integer>>();
+		// TODO: Add comments about this in report; we're not following the algorithms verbatim
 		HashSet<Integer> addedColours = new HashSet<Integer>();
 		Random rand = new Random();
 		for (int i = 0; i < m; i++) {
@@ -49,6 +50,7 @@ public class Main {
 				ArrayList<HashSet<Integer>> newColourSets = new ArrayList<HashSet<Integer>>();
 				for (HashSet<Integer> set : colourSets){
 					//Does not copy single elements but does not matter since they are ints.
+					// TODO: Unsafe copying. We should use constructor (new HashSet<Integer>(set))
 					HashSet<Integer> combination = (HashSet<Integer>) set.clone(); 
 					combination.add(colour);
 					newColourSets.add(combination);
@@ -61,7 +63,7 @@ public class Main {
 		}
 
 		// 3
-		int[][] fullMatrix = new int[n][n];
+		int[][] fullMatrix = new int[n][n];			// we call it B in report
 		for (int i = 0; i < n; i++) {
 			for (int j = 0; j < n; j++) {
 				for (int k = 0; k < n; k++) {
@@ -77,6 +79,7 @@ public class Main {
 		// 5
 		if (dB == 0)
 			System.out.println("No");
+		// TODO: End here
 		
 		// 6
 		int sum = 0;
@@ -87,6 +90,7 @@ public class Main {
 			for (int i : X) {
 				for (int j = 0; j < n; j++) {
 					for (int k = 0; k < n; k++) {
+						// TODO: Bug! should be M, right?
 						fullMatrix[j][k] += colourMatrices.get(i)[j][k];
 					}
 				}
