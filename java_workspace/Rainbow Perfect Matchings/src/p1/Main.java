@@ -25,8 +25,7 @@ public class Main {
 
 		Scanner scan = new Scanner(new FileReader(args[0]));
 		int n = scan.nextInt();
-		init_inverses(prime*n); //Since we add stuff andreas det wont work without this we might not need to add...
-		n = n / 2;
+		init_inverses(prime);
 		int m = scan.nextInt();
 
 		ArrayList<int[][]> colourMatrices = new ArrayList<int[][]>();
@@ -47,8 +46,8 @@ public class Main {
 			int from = scan.nextInt();
 			int to = scan.nextInt();
 			int colour = scan.nextInt();
-			//should be exclusive p as well see andreas comments.
-			colourMatrices.get(colour)[from - 1][to - n - 1] = rand.nextInt(prime-1);
+			//should be exclusive p as well see andreas comments on the java implementation of det.
+			colourMatrices.get(colour)[from][to] = rand.nextInt(prime-1) + 1;
 
 			// creates all subsets as a new colour is found
 			if (!addedColours.contains(colour)) {
@@ -65,13 +64,14 @@ public class Main {
 				colourSets.addAll(newColourSets);
 			}
 		}
+		colourSets.remove(addedColours); //Removes the full set.
 
 		// 3
 		int[][] fullMatrix = new int[n][n]; // we call it B in report
 		for (int i = 0; i < n; i++) {
 			for (int j = 0; j < n; j++) {
 				for (int k = 0; k < n; k++) {
-					fullMatrix[j][k] += colourMatrices.get(i)[j][k];
+					fullMatrix[j][k] = (fullMatrix[j][k] + colourMatrices.get(i)[j][k]) % PRIME;
 				}
 			}
 		}
@@ -96,7 +96,7 @@ public class Main {
 				for (int j = 0; j < n; j++) {
 					for (int k = 0; k < n; k++) {
 						// Fixed before, got merge conflicts grr.
-						M[j][k] += colourMatrices.get(i)[j][k];
+						M[j][k] = (M[j][k] + colourMatrices.get(i)[j][k]) % PRIME;
 					}
 				}
 			}
