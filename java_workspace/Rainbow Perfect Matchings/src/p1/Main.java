@@ -100,7 +100,9 @@ public class Main {
 					}
 				}
 			}
-			sum += Math.pow(-1, n - 1 - X.size()) * determinant(M, prime);
+			// Here is were all our problems lie, not sure we can remove the full set...
+			// Signs will be strange
+			sum =  (sum + (int)Math.pow(-1, n - 1 - X.size()) * determinant(M, prime)) % PRIME;
 		}
 
 		// 8
