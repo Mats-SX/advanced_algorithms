@@ -110,6 +110,8 @@ public class Main {
 			System.out.println("Yes");
 	}
 
+	
+	
 	// Andreas det methods.
 	static int inv[];
 
