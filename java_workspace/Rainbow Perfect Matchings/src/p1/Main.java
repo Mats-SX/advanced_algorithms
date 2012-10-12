@@ -65,7 +65,8 @@ public class Main {
 			}
 		}
 		// TODO: This is really awkward. Is addedColours.equals(<whatever is in there>) == true?
-		colourSets.remove(addedColours); //Removes the full set.
+		//Yes it is.
+//		colourSets.remove(addedColours); //Removes the full set.
 
 		// 3
 		int[][] fullMatrix = new int[n][n]; // we call it B in report
@@ -79,6 +80,7 @@ public class Main {
 
 		// 4
 		// TODO: Should we perhaps take dB = det(B) mod p ?
+		// We already do since that is how the determinant function works :)
 		int dB = 0;
 		dB = determinant(fullMatrix, prime);
 
@@ -104,10 +106,14 @@ public class Main {
 			}
 			// Here is were all our problems lie, not sure we can remove the full set...
 			// Signs will be strange
-			sum =  (sum + (int)Math.pow(-1, n - 1 - X.size()) * determinant(M, prime)) % PRIME;
+			int detM = determinant(M, prime);
+			System.out.println("detM: " + detM);
+			sum += Math.pow(-1, n - X.size()) * detM;
 		}
 
 		// 8
+		sum = sum % PRIME;
+		System.out.println(dB + " - " + sum);
 		if (dB - sum == 0)
 			System.out.println("No");
 		else
