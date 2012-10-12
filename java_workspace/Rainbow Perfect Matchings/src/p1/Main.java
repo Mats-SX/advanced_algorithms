@@ -2,9 +2,7 @@ package p1;
 
 import java.io.FileNotFoundException;
 import java.io.FileReader;
-import java.math.BigInteger;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.HashSet;
 import java.util.Random;
 import java.util.Scanner;
@@ -17,9 +15,12 @@ import java.util.Scanner;
  * 
  */
 public class Main {
-	public static final int PRIME = 32749; // largest prime smaller than 2^15
+	private static final int PRIME = 32749; // largest prime smaller than 2^15
 
 	public static void main(String[] args) throws FileNotFoundException {
+		// Time measurement
+		long start = System.currentTimeMillis();
+		
 		// 1
 		int prime = PRIME;
 
@@ -33,8 +34,6 @@ public class Main {
 		HashSet<Integer> allColours = new HashSet<Integer>();
 		for (int i = 0; i < n; i++) {
 			colourMatrices.add(new int[n][n]);
-			
-			//needs to be done for every colour even if not mentioned in input file
 			ArrayList<HashSet<Integer>> newColourSets = new ArrayList<HashSet<Integer>>();
 			for (HashSet<Integer> set : colourSets) {
 				HashSet<Integer> combination = new HashSet<Integer>(set);
@@ -47,41 +46,34 @@ public class Main {
 			colourSets.add(aloneColourSet);
 			colourSets.addAll(newColourSets);
 		}
-		// need to investigate if this works
 		colourSets.remove(allColours);
 
 		// 2
-		HashSet<Integer> addedColours = new HashSet<Integer>();
 		Random rand = new Random();
 		for (int i = 0; i < m; i++) {
 			int from = scan.nextInt();
 			int to = scan.nextInt();
 			int colour = scan.nextInt();
-			//should be exclusive p as well see andreas comments on the java implementation of det.
 			colourMatrices.get(colour)[from][to] = rand.nextInt(prime-1) + 1;
 		}
-		// TODO: This is really awkward. Is addedColours.equals(<whatever is in there>) == true?
-		//But addedColours does not always contain the full set
-		colourSets.remove(addedColours); //Removes the full set.
 
 		// 3
-		int[][] fullMatrix = new int[n][n]; // we call it B in report
+		int[][] allColourMatrix = new int[n][n];
 		for (int i = 0; i < n; i++) {
 			for (int j = 0; j < n; j++) {
 				for (int k = 0; k < n; k++) {
-					fullMatrix[j][k] = (fullMatrix[j][k] + colourMatrices.get(i)[j][k]) % PRIME;
+					allColourMatrix[j][k] = (allColourMatrix[j][k] + colourMatrices.get(i)[j][k]) % prime;
 				}
 			}
 		}
 
 		// 4
-		// TODO: Should we perhaps take dB = det(B) mod p ?
-		// We already do since that is how the determinant function works :)
 		int dB = 0;
-		dB = determinant(fullMatrix, prime);
+		dB = determinant(allColourMatrix, prime);
 
 		// 5
 		if (dB == 0) {
+			System.out.println("Running time (ms): " + (System.currentTimeMillis() - start));
 			System.out.println("No");
 			return;
 		}
@@ -95,21 +87,19 @@ public class Main {
 			for (int i : X) {
 				for (int j = 0; j < n; j++) {
 					for (int k = 0; k < n; k++) {
-						// Fixed before, got merge conflicts grr.
-						M[j][k] = (M[j][k] + colourMatrices.get(i)[j][k]) % PRIME;
+						M[j][k] = (M[j][k] + colourMatrices.get(i)[j][k]) % prime;
 					}
 				}
 			}
-			// Here is were all our problems lie, not sure we can remove the full set...
-			// Signs will be strange
-			int detM = determinant(M, prime);
-			System.out.println("detM: " + detM);
-			sum += Math.pow(-1, n - 1 - X.size()) * detM;
+			sum += (int) Math.pow(-1, (n - X.size() + 1)) * determinant(M, prime);
 		}
 
 		// 8
-		sum = sum % PRIME;
-		System.out.println(dB + " - " + sum);
+		while (sum < 0) {
+			sum += prime;
+		}
+		sum = sum % prime;
+		System.out.println("Running time (ms): " + (System.currentTimeMillis() - start));
 		if (dB - sum == 0)
 			System.out.println("No");
 		else
@@ -198,5 +188,4 @@ public class Main {
 		}
 		return d;
 	}
-
 }
