@@ -28,18 +28,29 @@ public class Main {
 		init_inverses(prime);
 		int m = scan.nextInt();
 
+		ArrayList<HashSet<Integer>> colourSets = new ArrayList<HashSet<Integer>>();
 		ArrayList<int[][]> colourMatrices = new ArrayList<int[][]>();
+		HashSet<Integer> allColours = new HashSet<Integer>();
 		for (int i = 0; i < n; i++) {
 			colourMatrices.add(new int[n][n]);
+			
+			//needs to be done for every colour even if not mentioned in input file
+			ArrayList<HashSet<Integer>> newColourSets = new ArrayList<HashSet<Integer>>();
+			for (HashSet<Integer> set : colourSets) {
+				HashSet<Integer> combination = new HashSet<Integer>(set);
+				combination.add(i);
+				newColourSets.add(combination);
+			}
+			HashSet<Integer> aloneColourSet = new HashSet<Integer>();
+			aloneColourSet.add(i);
+			allColours.add(i);
+			colourSets.add(aloneColourSet);
+			colourSets.addAll(newColourSets);
 		}
+		// need to investigate if this works
+		colourSets.remove(allColours);
 
 		// 2
-		// additional optimization
-		ArrayList<HashSet<Integer>> colourSets = new ArrayList<HashSet<Integer>>();
-		// TODO: Add comments about this in report; we're not following the
-		// algorithms verbatim
-		// Changing the algorithm or just making a comment in the algorithm
-		// section?
 		HashSet<Integer> addedColours = new HashSet<Integer>();
 		Random rand = new Random();
 		for (int i = 0; i < m; i++) {
@@ -48,25 +59,10 @@ public class Main {
 			int colour = scan.nextInt();
 			//should be exclusive p as well see andreas comments on the java implementation of det.
 			colourMatrices.get(colour)[from][to] = rand.nextInt(prime-1) + 1;
-
-			// creates all subsets as a new colour is found
-			if (!addedColours.contains(colour)) {
-				addedColours.add(colour);
-				ArrayList<HashSet<Integer>> newColourSets = new ArrayList<HashSet<Integer>>();
-				for (HashSet<Integer> set : colourSets) {
-					HashSet<Integer> combination = new HashSet<Integer>(set);
-					combination.add(colour);
-					newColourSets.add(combination);
-				}
-				HashSet<Integer> aloneColourSet = new HashSet<Integer>();
-				aloneColourSet.add(colour);
-				colourSets.add(aloneColourSet);
-				colourSets.addAll(newColourSets);
-			}
 		}
 		// TODO: This is really awkward. Is addedColours.equals(<whatever is in there>) == true?
-		//Yes it is.
-//		colourSets.remove(addedColours); //Removes the full set.
+		//But addedColours does not always contain the full set
+		colourSets.remove(addedColours); //Removes the full set.
 
 		// 3
 		int[][] fullMatrix = new int[n][n]; // we call it B in report
@@ -108,7 +104,7 @@ public class Main {
 			// Signs will be strange
 			int detM = determinant(M, prime);
 			System.out.println("detM: " + detM);
-			sum += Math.pow(-1, n - X.size()) * detM;
+			sum += Math.pow(-1, n - 1 - X.size()) * detM;
 		}
 
 		// 8
