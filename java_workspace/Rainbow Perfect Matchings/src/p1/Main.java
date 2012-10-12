@@ -64,6 +64,7 @@ public class Main {
 				colourSets.addAll(newColourSets);
 			}
 		}
+		// TODO: This is really awkward. Is addedColours.equals(<whatever is in there>) == true?
 		colourSets.remove(addedColours); //Removes the full set.
 
 		// 3
@@ -77,6 +78,7 @@ public class Main {
 		}
 
 		// 4
+		// TODO: Should we perhaps take dB = det(B) mod p ?
 		int dB = 0;
 		dB = determinant(fullMatrix, prime);
 
