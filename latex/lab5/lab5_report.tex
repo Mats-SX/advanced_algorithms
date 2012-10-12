@@ -1,5 +1,8 @@
 \documentclass{tufte-handout}
 \usepackage{amsmath,amsthm}
+\usepackage{fancyvrb}
+\fvset{tabsize = 4}
+\fvset{fontsize = \small}
 
 \usepackage{pgfplots}
 %\pgfplotsset{width=\textwidth,compat=1.5.1}
@@ -27,7 +30,7 @@
 \subitem Initialize $M = \mathbf{0}$ \sidenote{$\mathbf{0}$ is the $n \ast n$ all-zeroes matrix.}
 \subitem For each $C \in X$
 \subsubitem Set $M = M + m_C$
-\subitem Set $sum = sum + (-1)^{n-1-|X|} \cdot$ det$(M)$ mod $p$
+\subitem Set $sum = sum + (-1)^{n-|X|-1} \cdot$ det$(M)$ mod $p$
 \item If $d_B - sum = 0$ return ''no'' else return ''yes''
 \end{enumerate}
 
@@ -41,35 +44,52 @@ For Algorithmic Piece 2, we have modified the pseudo code to be defined via matr
 
 
 \section{Running Time}
+In our calculations, we define the basic, constant-time operations to be scalar additions and scalar multiplications. Any other operation we assume to take no time.
+
+We are only interested in a running time bound with respect to $n$, hence we assume a worst-case $m = n^2$, and do not include $m$ in our $O$-notation.
+
+Step by step, we pay as follows:
+
 \begin{enumerate}
-\item $O(1)$
-\item $O(n)$
-\subitem $O(1)$
-\subitem Worst case $n$ edges of colour $C$ from all $n$ nodes $\Rightarrow O(n^2)$
-\subsubitem $O(1)$
-\subsubitem $O(1)$
-\item $T(n) = n^3$ additions. $\Rightarrow O(n^3)$
-\item $O(1)$
-\item $O(1)$
-\item There are $2^n$ subsets to a set of $n$ elements $\Rightarrow T(n) = 2^n - 2\text{(the empty set and the full set)} \Rightarrow O(2^n)$
-\subitem $O(1)$
-\subitem Since $|X| \leq n-1$, this is $O(n)$, right?
-\subsubitem $n^2$ additions $\Rightarrow O(n^2)$?
-\subitem $T(n) = 1 + (n-2) + O(det(M))$
-\item $O(1)$
+\item No time.
+\item $n$ repetitions of
+\subitem No time.
+\subitem Worst case $n$ edges of colour $C$ from all $n$ nodes $\Rightarrow T(n) = n^2$ repetitions of
+\subsubitem No time.
+\subsubitem No time.
+\item $T(n) = n^3$ additions $\Rightarrow T(n) = n^3$
+\item $T(n) = \frac{2}{3}\cdot n^3 \Rightarrow T(n) =\frac{2}{3} n^3$ \sidenote{Knowing our determinant calculation implements Gaussian elimination, this is the number of operations required. Normally, this would have exponential bit complexity, but our calculations are made modulus $p$, and are thus constant in bit complexity \cite{wikiGauss}.}
+\item No time.
+\item No time.
+\item There are $2^n$ subsets to a set of $n$ elements $\Rightarrow T(n) = 2^n - 2$ (the empty set and the full set) repetitions of
+\subitem No time.
+\subitem On average for each $X$, $T(n) = \frac{1}{2} n$ \sidenote{This follows from how frequent a given size of an element in the power set of $[n]$ is \cite{powerset}.} repetitions of
+\subsubitem $n^2$ additions $\Rightarrow T(n) = n^2$
+\subitem $1$ addtition, worst case $n - 2$ multiplications of $-1$, $1$ multiplication and $T(n) = \frac{2}{3}n^3$ cost for determinant calculation gives $T(n) = 1 + (n - 2) + 1 + \frac{2}{3}n^3 = \frac{2}{3}n^3 + n$
+\item $1$ addtition $\Rightarrow T(n) = 1$
 \end{enumerate}
 
+This results in final running time of
 
-$$T(n) = 1 + n(1 + n^2(1 + 1)) + (n^3 | 1) + 1 + 1 + (2^n - 2)\cdot(1 + n(n^2 | 1) + 1 + (n - 2) + O(det(M))$$ 
-$$ \leq 3 - n + n^3 - 2T(det(M)) + 2^n(n + n^3 + T(det(M)))$$
-$$ \leq 2^n(n + n^3 + T(det(M)))$$
+$$
+T(n) = 0 + n(0 + n^2(0 + 0)) + n^3 + \frac{2}{3}n^3 + 0 + 0 + (2^n - 2)(0 + \frac{1}{2}n (n^2) + \frac{2}{3}n^3 + n) + 1
+$$
 
-$$T(det(M)) = ?$$
-The anwer will probably become
-$$O(2^n)$$
-eventually. But how do we convince ourselves?
+$$
+= \frac{5}{3}n^3 + (2^n - 2)(\frac{7}{6}n^3 + n) + 1
+$$
 
-I asked on Piazza.
+$$
+= \frac{5}{3}n^3 + 1 - \frac{7}{3}n^3 - 2n + 2^n(\frac{7}{6}n^3 + n)
+$$
+
+$$
+= 1 - 2n - \frac{2}{3}n^3 + 2^n(\frac{7}{6}n^3 + n)
+$$
+
+The dominant factor here is, as expected, exponential in $n$. Thus we do have $O^*(2^n)$. We could also present a running time bound of $O(n^3\cdot2^n)$, in which we consider all factors with an exponential in $n$ relevant, and take the largest-degree polynomial of this factor as our bound.
+
+The exponential $2^n$ factor come from the fact that we are traversing the power set of an $n$-sized set. The plynomial $n^3$ factor comes from our determinant calculation, which runs this fast. Thus, the $O(n^3\cdot2^n)$ really summarizes our algorithm in a nice way; we do calculate a determinant for a matrix corresponding to every element of the power set of $[n]$.
 
 \newpage
 \section{Failure bound}
@@ -135,5 +155,17 @@ wikipedia.txt & \\
 p2p-Gnutella08-mod.txt &
 \end{tabular}
 \end{fullwidth}
+
+\appendix
+
+\section{Implementation}
+This is our implementation of our Perfect Rainbow Matching algorithm. It is only sparsely commented, but we expect its behaviour to be fairly straight-forward. We have tried to follow our pseudo-code verbatim, putting aside Java programming practices to some extent.
+\VerbatimInput{Main.java}
+
+\begin{thebibliography}{9}
+\bibitem{powerset} Wikipedia, the Free Encyclopedia, \emph{Power set},  \url{http://en.wikipedia.org/wiki/Power_set#Relation_to_binomial_theorem}, 10 October 2012 05:20
+\bibitem{wikiGauss} Wikipedia, the Free Encyclopedia, \emph{Gaussian elimination}, \url{http://en.wikipedia.org/wiki/Gaussian_elimination#Analysis}, 29 September 2012 03:39
+\end{thebibliography}
+
 
 \end{document}
