@@ -91,11 +91,21 @@ The dominant factor here is, as expected, exponential in $n$. Thus we do have $O
 
 The exponential $2^n$ factor come from the fact that we are traversing the power set of an $n$-sized set. The plynomial $n^3$ factor comes from our determinant calculation, which runs this fast. Thus, the $O(n^3\cdot2^n)$ really summarizes our algorithm in a nice way; we do calculate a determinant for a matrix corresponding to every element of the power set of $[n]$.
 
-\newpage
 \section{Failure bound}
+Since we are working with random numbers, there is always some cases in which these random numbers doesn't work as we expect them to. In particular, two random numbers may become the same. This will provide our algorithm with false negatives, which's frequency we want to investigate.
 
+First, we conclude that if there is exactly one Perfect Rainbow Matching, there will be no false negative. This follows because $p$ is a prime, and $d_B - sum$ will consist of only one monomial $x$, which is a product of random numbers and hence it can not be prime, so $x$ mod $p \neq 0$.
 
+Second, if we have $k > 1$ Perfect Rainbow Matchings, we will have $k$ monomials in $d_B - sum$, each of degree $d$ such that $2 \leq d \leq n$, depending on how many edges the PRM represented by $k_i$ shares with its counterpart $k_j$. Note that the minimum bound on $d$ can not be $1$, since we are not allowing any two edges $uv$ and $(uv)'$ to have the same colour. The sum of the monomials may be equal to zero, in fact the probability that they are follows directly from the Schwartz-Zippel lemma as\cite{zippel}
+$$
+Pr[f(r_1,r_2,\ldots,r_m) = 0] \leq \frac{d}{|S|} 
+$$
+where $f$ is the sum of our $k$ monomials, with random numbers $r_1$ through $r_m$ (in general) taken from the finite interval $[1,p-1] \Rightarrow |S| = p - 1 - 1 + 1 = p - 1$. In the worst case, we have $d = n$ which gives us the probability of $f = 0$ as
+$$
+\frac{d}{|S|} \leq \frac{n}{p-1}
+$$
 
+\newpage
 \begin{marginfigure}
 \begin{tikzpicture}
 \node (0) [draw,circle] at (0,0) {0};
@@ -165,6 +175,7 @@ This is our implementation of our Perfect Rainbow Matching algorithm. It is only
 \begin{thebibliography}{9}
 \bibitem{powerset} Wikipedia, the Free Encyclopedia, \emph{Power set},  \url{http://en.wikipedia.org/wiki/Power_set#Relation_to_binomial_theorem}, 10 October 2012 05:20
 \bibitem{wikiGauss} Wikipedia, the Free Encyclopedia, \emph{Gaussian elimination}, \url{http://en.wikipedia.org/wiki/Gaussian_elimination#Analysis}, 29 September 2012 03:39
+\bibitem{zippel} Wikipedia, the Free Encyclopedia, \emph{Schwartz–Zippel lemma}, \url{http://en.wikipedia.org/wiki/Schwartz\%E2\%80\%93Zippel_lemma#Schwartz.E2.80.93Zippel_lemma}, 3 October 2012 15:22
 \end{thebibliography}
 
 

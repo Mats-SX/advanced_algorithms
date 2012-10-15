@@ -101,6 +101,10 @@ public class Main {
 		}
 
 		// 8
+		/* 
+		 * Since the % operator doesn't work as expected for negative numbers
+		 * in Java, we manually modulo the sum to the correct interval
+		 */ 
 		while (sum < 0) {
 			sum += prime;
 		}
